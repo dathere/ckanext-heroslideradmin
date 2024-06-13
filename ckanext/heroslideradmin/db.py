@@ -8,7 +8,7 @@ from sqlalchemy.orm import class_mapper
 try:
     from sqlalchemy.engine.result import RowProxy
 except:
-    from sqlalchemy.engine.base import RowProxy
+    from sqlalchemy.engine import Row as RowProxy
 import ckan.model as model
 
 
