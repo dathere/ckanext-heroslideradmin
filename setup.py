@@ -82,8 +82,6 @@ setup(
         [ckan.plugins]
         heroslideradmin=ckanext.heroslideradmin.plugin:HeroSliderAdminPlugin
 
-        [paste.paster_command]
-        heroslideradmin = ckanext.heroslideradmin.commands.paster:HeroSliderAdmin
 
         [babel.extractors]
         ckan = ckan.lib.extract:extract_ckan

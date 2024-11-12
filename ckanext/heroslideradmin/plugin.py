@@ -8,38 +8,28 @@ import ckanext.heroslideradmin.actions as actions
 import ckanext.heroslideradmin.auth as auth
 import ckanext.heroslideradmin.db as db
 import ckanext.heroslideradmin.helpers as helpers
-
-if toolkit.check_ckan_version(min_version='2.9.0'):
-    from ckanext.heroslideradmin.plugin.flask_plugin import MixinPlugin
-else:
-    from ckanext.heroslideradmin.plugin.pylons_plugin import MixinPlugin
+import ckanext.heroslideradmin.views as views
 
 
 log = logging.getLogger(__name__)
 
 
-class HeroSliderAdminPlugin(MixinPlugin, plugins.SingletonPlugin):
+class HeroSliderAdminPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
-    plugins.implements(plugins.IConfigurable)
     plugins.implements(plugins.ITemplateHelpers)
     plugins.implements(plugins.IAuthFunctions, inherit=True)
     plugins.implements(plugins.IActions)
+    plugins.implements(plugins.IBlueprint)
+
+    # IBlueprint
+    def get_blueprint(self):
+        return views.get_blueprints()
 
     # IConfigurer
     def update_config(self, config):
-        toolkit.add_template_directory(config, '../templates')
-        toolkit.add_public_directory(config, '../public')
-        toolkit.add_resource('../assets', 'heroslideradmin')
-        if toolkit.check_ckan_version(min_version='2.4', max_version='2.9.0'):
-            toolkit.add_ckan_admin_tab(config, 'hero_slider_admin', 'Hero Slider Config')
-        elif toolkit.check_ckan_version(min_version='2.9.0'):
-            toolkit.add_ckan_admin_tab(config, 'heroslideradmin_blueprint.hero_slider_admin',
-                'Hero Slider Config'
-            )
-
-    # IConfigurable
-    def configure(self, config):
-        db.init()
+        toolkit.add_template_directory(config, 'templates')
+        toolkit.add_public_directory(config, 'public')
+        toolkit.add_resource('assets', 'heroslideradmin')
 
     # ITemplateHelpers
     def get_helpers(self):

@@ -12,49 +12,39 @@ except:
 import ckan.model as model
 
 
-hero_slider_table = None
+try:
+    from ckan.plugins.toolkit import BaseModel
+except ImportError:
+    # CKAN <= 2.9
+    from ckan.model.meta import metadata
+    from sqlalchemy.ext.declarative import declarative_base
 
 
 def _make_uuid():
     return text_type(uuid.uuid4())
 
 
-def init():
-    if hero_slider_table is None:
-        define_hero_slider_table()
+class Hero_Slider(model.DomainObject, BaseModel):
 
-    if not hero_slider_table.exists():
-        hero_slider_table.create()
-
-
-class Hero_Slider(model.DomainObject):
+    __tablename__ = 'hero_slider'
+    id = sa.Column(sa.UnicodeText, primary_key=True, default=_make_uuid)
+    image_url_1 = sa.Column(sa.UnicodeText, default=u'')
+    hero_text_1 = sa.Column(sa.UnicodeText, default=u'')
+    image_url_2 = sa.Column(sa.UnicodeText, default=u'')
+    hero_text_2 = sa.Column(sa.UnicodeText, default=u'')
+    image_url_3 = sa.Column(sa.UnicodeText, default=u'')
+    hero_text_3 = sa.Column(sa.UnicodeText, default=u'')
+    image_url_4 = sa.Column(sa.UnicodeText, default=u'')
+    hero_text_4 = sa.Column(sa.UnicodeText, default=u'')
+    image_url_5 = sa.Column(sa.UnicodeText, default=u'')
+    hero_text_5 = sa.Column(sa.UnicodeText, default=u'')
+    created = sa.Column(sa.DateTime, default=datetime.datetime.now())
+    modified = sa.Column(sa.DateTime, default=datetime.datetime.now())
 
     @classmethod
     def get_hero_images(self):
         query = model.Session.query(self).autoflush(False)
         return query.first()
-
-
-def define_hero_slider_table():
-    global hero_slider_table
-    hero_slider_table = sa.Table('hero_slider', model.meta.metadata,
-        sa.Column('id', sa.types.UnicodeText, primary_key=True, default=_make_uuid),
-        sa.Column('image_url_1', sa.types.UnicodeText, default=u''),
-        sa.Column('hero_text_1', sa.types.UnicodeText, default=u''),
-        sa.Column('image_url_2', sa.types.UnicodeText, default=u''),
-        sa.Column('hero_text_2', sa.types.UnicodeText, default=u''),
-        sa.Column('image_url_3', sa.types.UnicodeText, default=u''),
-        sa.Column('hero_text_3', sa.types.UnicodeText, default=u''),
-        sa.Column('image_url_4', sa.types.UnicodeText, default=u''),
-        sa.Column('hero_text_4', sa.types.UnicodeText, default=u''),
-        sa.Column('image_url_5', sa.types.UnicodeText, default=u''),
-        sa.Column('hero_text_5', sa.types.UnicodeText, default=u''),
-        sa.Column('created', sa.types.DateTime, default=datetime.datetime.utcnow),
-        sa.Column('modified', sa.types.DateTime, default=datetime.datetime.utcnow),
-        extend_existing=True
-    )
-
-    model.meta.mapper(Hero_Slider, hero_slider_table)
 
 
 def table_dictize(obj, context, **kw):

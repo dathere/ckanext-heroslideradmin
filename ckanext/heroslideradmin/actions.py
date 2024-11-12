@@ -10,13 +10,7 @@ from ckan import model
 
 from ckanext.heroslideradmin import db
 
-try:
-    unicode_safe = toolkit.get_validator('unicode_safe')
-except toolkit.UnknownValidator:
-    # CKAN 2.7
-    unicode_safe = unicode
-
-
+unicode_safe = toolkit.get_validator('unicode_safe')
 ignore_empty = toolkit.get_validator('ignore_empty')
 ignore_missing = toolkit.get_validator('ignore_missing')
 not_empty = toolkit.get_validator('not_empty')
